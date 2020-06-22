@@ -35,6 +35,7 @@ var client = new FrontSharpClient();
       * **Create**
   * Contacts
       * **Get**
+      * **ListConversations**
   * Conversations
       * **Get**
       * **List**
