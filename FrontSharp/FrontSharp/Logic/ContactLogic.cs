@@ -2,6 +2,8 @@
 using FrontSharp.Models;
 using FrontSharp.Requests;
 using RestSharp;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FrontSharp.Logic
 {
@@ -52,6 +54,32 @@ namespace FrontSharp.Logic
             var request = base.BuildRequest(Method.POST);
 
             return _client.Execute<Contact>(request, contact);
+        }
+
+        /// <summary>
+        /// Lists all the conversations for a given contact id 
+        /// </summary>
+        /// <param name="contactId">Id of the requested contact</param>
+        /// <param name="statusFilter">Limits results to only the statuses given or all results if no filters are provided</param>
+        /// <param name="limit">The number of results to be retrieved (50 is the default, 100 is the max)</param>
+        /// <returns>A list response of the related converstations</returns>
+        public ListResultResponseBody<Conversation> ListConversations(string contactId, List<ConversationStatusFilter> statusFilter = null, int? limit = null)
+        {
+            var request = base.BuildRequest();
+            request.Resource += "/{contactId}/conversations";
+            request.AddParameter("contactId", contactId, ParameterType.UrlSegment);
+
+            if (statusFilter != null && statusFilter.Count() > 0)
+            {
+                foreach (var filter in statusFilter)
+                {
+                    request.AddParameter("q[statuses][]", filter.ToString().ToLower(), ParameterType.QueryString);
+                }
+            }
+
+            if (limit != null) request.AddParameter("limit", limit > 100 ? 100 : limit, ParameterType.QueryString);
+
+            return _client.Execute<ListResultResponseBody<Conversation>>(request);
         }
 
 

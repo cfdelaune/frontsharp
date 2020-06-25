@@ -1,5 +1,6 @@
 ﻿using FrontSharp.Models;
 using FrontSharp.Requests;
+using System.Collections.Generic;
 
 namespace FrontSharp.Interfaces
 {
@@ -13,6 +14,7 @@ namespace FrontSharp.Interfaces
 
         Contact Create(CreateContactRequest contact);
 
+        ListResultResponseBody<Conversation> ListConversations(string contactId, List<ConversationStatusFilter> statusFilter = null, int? limit = null);
 
         void AddHandle(string contactId, AddHandleRequest addHandle);
 
